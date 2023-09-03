@@ -1,0 +1,2 @@
+# WhisperMultitaskFinetuning
+关于Whisper语音大模型的多任务微调
