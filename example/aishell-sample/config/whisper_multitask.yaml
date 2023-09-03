@@ -1,0 +1,53 @@
+
+data:
+  train:
+    wav_scp: "/mnt/f/wsl/asr_large_model/whisper-multitask-finetuning/example/aishell-sample/data/wav.scp"
+    text: "/mnt/f/wsl/asr_large_model/whisper-multitask-finetuning/example/aishell-sample/data/text"
+  test:
+    wav_scp: "/mnt/f/wsl/asr_large_model/whisper-multitask-finetuning/example/aishell-sample/data/wav.scp"
+    text: "/mnt/f/wsl/asr_large_model/whisper-multitask-finetuning/example/aishell-sample/data/text"
+
+predict:
+  model_path: "/mnt/f/wsl/asr_large_model/whisper-multitask-finetuning/example/aishell-sample/model"
+  result_file: "./data/result"
+  eval: 
+    wav_scp: "/mnt/f/wsl/asr_large_model/whisper-multitask-finetuning/example/aishell-sample/data/wav.scp"
+    text: "/mnt/f/wsl/asr_large_model/whisper-multitask-finetuning/example/aishell-sample/data/text"
+
+
+model:
+  model_path: "/mnt/f/wsl/asr_large_model/whisper_model/whisper-large-v2"
+  is_large_model: True
+  data_collator:
+    forward_attention_mask: False
+  model_train_argv:
+    out_model_path: "./model"
+    resume_from_checkpoint : ""
+    per_device_train_batch_size: 1
+    per_device_eval_batch_size: 1
+    gradient_accumulation_steps: 1
+    num_train_epochs: 1
+    learning_rate: 0.0001
+    logging_steps: 2
+    fp16: False
+    warmup_steps: 50
+    evaluation_strategy: "epoch"
+    generation_max_length: 128
+    remove_unused_columns: False
+    label_names:
+      - labels
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
