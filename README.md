@@ -110,4 +110,5 @@ python3 predict.py
 
 
 ## 讨论交流群
+<img src=https://github.com/YLQY/WhisperMultitaskFinetuning/blob/main/res/qq.jpg width=40% />
 
