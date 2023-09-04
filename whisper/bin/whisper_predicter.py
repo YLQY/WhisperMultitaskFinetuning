@@ -89,7 +89,7 @@ class WhisperPredicter:
         # 加载大模型
         if self.config['model']['is_large_model']:
             log_info("加载 whisper模型 - 经过peft微调")
-            peft_model_id = "/mnt/f/wsl/asr_large_model/train_whisper/project-mutitask/model/whisper_fineture"
+            peft_model_id = self.config['predict']['model_path']
             peft_config = PeftConfig.from_pretrained(peft_model_id)
             self.model = WhisperForConditionalGeneration.from_pretrained(
                 peft_config.base_model_name_or_path
