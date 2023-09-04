@@ -52,7 +52,7 @@ cd example/aishell-sample
 | BAC009S0150W0001 |  chinese  | translate |
 | BAC009S0150W0001 |  chinese  | transcribe |
 ```markdown
-# 模型总共训练数据
+# 模型总共训练数据 - 将翻译和转录的数据合并为一个整体
 cat data/transcribe/wav.scp data/translate/wav.scp > data/wav.scp
 cat data/transcribe/text data/translate/text > data/text
 ```
