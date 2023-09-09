@@ -75,6 +75,17 @@ predict:
     wav_scp: "验证数据wav.scp的绝对路径"
     text: "验证数据text的绝对路径"
 
+dev_env:
+  ori_model_path: "原始模型路径"
+  ctranslate_model_path: "ctranslate转后的模型"
+  conf:
+    device: "cpu"
+    compute_type: "float32"
+  result_file: "结果保存的绝对路径"
+  dev:
+    wav_scp: "测试数据wav.scp的绝对路径"
+    text: "测试数据text的绝对路径"
+
 model:
   model_path: "自己的whisper_large_v2或者base模型路径"
   is_large_model: "如果是whisper_large_v2模型则设置为True否则为False"
