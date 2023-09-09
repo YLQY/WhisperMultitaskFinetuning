@@ -31,6 +31,35 @@ class WhisperPredicter:
 
         pass
 
+    def predict_start_gpu(self):
+        """
+            模型的预测 - gpu解码
+        """
+        self.model = self.model.cuda()
+        out_file = open(self.config['predict']['result_file'],'w',encoding="utf-8")
+        for step, batch in enumerate(tqdm(self.eval_data_list)):
+            with torch.cuda.amp.autocast():
+                with torch.no_grad():
+                    generated_tokens = (
+                        self.model.generate(
+                            input_features=torch.from_numpy(batch["input_features"][np.newaxis,:,:]).to("cuda"),
+                            decoder_input_ids=torch.from_numpy(np.array([batch["labels"][:4]])).to("cuda"),
+                            max_new_tokens=255,
+                        )
+                        .cpu()
+                        .numpy()
+                    )
+                    labels = batch["labels"]
+                    labels = np.where(labels != -100, labels, self.whisper_tokenizer.pad_token_id)
+
+                    decoded_preds = self.whisper_tokenizer.batch_decode(generated_tokens, skip_special_tokens=False)
+                    decoded_labels = self.whisper_tokenizer.batch_decode(labels, skip_special_tokens=True)
+                    out_file.write(batch['idx']+" "+decoded_preds[0]+"\n")
+                    pass
+                pass
+            del generated_tokens, labels, batch
+        pass
+
     def predict_start(self):
         """
             模型的预测
@@ -48,6 +77,19 @@ class WhisperPredicter:
                         .cpu()
                         .numpy()
                     )
+                    # out = self.model.generate(
+                    #     input_features=torch.from_numpy(batch["input_features"][np.newaxis,:,:]),
+                    #     decoder_input_ids=torch.from_numpy(np.array([batch["labels"][:4]])),
+                    #     max_new_tokens=255,
+                    #     output_scores=True,
+                    #     output_attentions=False,
+                    #     output_hidden_states=False,
+                    #     return_dict_in_generate=True
+                    # )
+                    # print(type(out))
+                    # print(len(out.scores))
+                    # print(out.scores[0].size())
+
                     labels = batch["labels"]
                     labels = np.where(labels != -100, labels, self.whisper_tokenizer.pad_token_id)
 

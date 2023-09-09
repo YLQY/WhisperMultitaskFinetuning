@@ -137,7 +137,7 @@ class IterWhisperDataset(IterableDataset):
                 log_info("---------error-----------：language或者task有问题")
                 continue
             
-            example['labels'] = self.whisper_tokenizer(text).input_ids[1:]
+            example['labels'] = self.whisper_tokenizer(text).input_ids[:]
             res_jie = self.whisper_tokenizer.decode(example['labels'],skip_special_tokens=False)
             # print("---解码--->",res_jie)
             # print(example['labels'])
