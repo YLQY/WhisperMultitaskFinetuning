@@ -73,3 +73,17 @@ python3 train.py
 ```markdown
 python3 predict.py
 ```
+### 1.5 使用CTranslate2进行模型加速
+```markdown
+from whisper.utils.common_utils import convert_finetuning_peft_model_into_whisper
+
+log_info("Lora参数融入Whsiper")
+convert_finetuning_peft_model_into_whisper(
+  # 微调后的peft模型路径
+  peft_model_path=config['predict']['model_path'],
+  # 原始whisper模型路径
+  whisper_model_path=config['dev_env']['ori_model_path'],
+  # 可以使用ctranslate加速后的模型位置
+  out_ctranslate_path = config['dev_env']['ctranslate_model_path']
+)
+```
