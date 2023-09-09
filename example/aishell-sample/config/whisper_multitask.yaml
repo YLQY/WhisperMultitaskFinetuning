@@ -14,6 +14,21 @@ predict:
     wav_scp: "/mnt/f/wsl/asr_large_model/whisper-multitask-finetuning/example/aishell-sample/data/wav.scp"
     text: "/mnt/f/wsl/asr_large_model/whisper-multitask-finetuning/example/aishell-sample/data/text"
 
+dev_env:
+  # 原始模型
+  ori_model_path: "/mnt/f/wsl/asr_large_model/whisper_model/whisper-large-v2"
+  # 转后的模型 - ct2-transformers-converter --model openai/whisper-tiny --output_dir whisper-tiny-ct2
+  ctranslate_model_path: "/mnt/f/wsl/asr_large_model/whisper-multitask-finetuning/example/aishell-sample/ctranslate"
+  conf:
+    # ['cuda','cpu']
+    device: "cpu"
+    # ['float16','int8_float16(run on GPU with INT8)','int8']
+    compute_type: "float32"
+  result_file: "./data/result_fast"
+  dev:
+    wav_scp: "/mnt/f/wsl/asr_large_model/whisper-multitask-finetuning/example/aishell-sample/data/wav.scp"
+    text: "/mnt/f/wsl/asr_large_model/whisper-multitask-finetuning/example/aishell-sample/data/text"
+
 
 model:
   model_path: "/mnt/f/wsl/asr_large_model/whisper_model/whisper-large-v2"
