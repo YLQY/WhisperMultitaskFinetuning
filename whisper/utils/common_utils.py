@@ -1,4 +1,4 @@
-
+import os
 import yaml
 import logging
 from peft import PeftModel
@@ -26,10 +26,11 @@ def convert_finetuning_peft_model_into_whisper(
     merged_model = model.merge_and_unload(progressbar=True)
 
     whisper_tokenizer = WhisperTokenizer.from_pretrained(whisper_model_path)
-
+    merged_model.save_pretrained(out_ctranslate_path)
+    os.system("ct2-transformers-converter --model "+out_ctranslate_path+" --output_dir "+out_ctranslate_path+"_real")
     # 获得转换器
-    transformers_converter = TransformersConverter(whisper_model_path,merged_model,whisper_tokenizer)
-
+    # transformers_converter = TransformersConverter(whisper_model_path,merged_model,whisper_tokenizer)
+    
     # output_dir: Output directory where the CTranslate2 model is saved.
     # vmap: Optional path to a vocabulary mapping file that will be included
     #         in the converted model directory.
@@ -37,7 +38,7 @@ def convert_finetuning_peft_model_into_whisper(
     #         int8_float16, int8_bfloat16, int16, float16, bfloat16, float32).
     # force: Override the output directory if it already exists.
     # 模型转化
-    transformers_converter.convert(out_ctranslate_path,force=True)
+    # transformers_converter.convert(out_ctranslate_path,force=True)
     pass
 
 def load_whisper_config(config_path):
