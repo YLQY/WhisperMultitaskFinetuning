@@ -132,7 +132,7 @@ convert_finetuning_peft_model_into_whisper(
   out_ctranslate_path = config['dev_env']['ctranslate_model_path']
 )
 ```
-
+<! --
 ## 讨论交流群
-<img src=https://github.com/YLQY/WhisperMultitaskFinetuning/blob/main/res/qq.jpg width=40% />
+ <img src=https://github.com/YLQY/WhisperMultitaskFinetuning/blob/main/res/qq.jpg width=40% /> -->
 
