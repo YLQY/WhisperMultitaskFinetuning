@@ -134,8 +134,9 @@ class IterWhisperDataset(IterableDataset):
             elif language == "chinese" and task == "translate":
                 self.whisper_tokenizer.set_prefix_tokens(language=language, task=task)
             else:
-                log_info("---------error-----------：language或者task有问题")
-                continue
+                #log_info("---------error-----------：language或者task有问题")
+                self.whisper_tokenizer.set_prefix_tokens(language=language, task=task)
+                
             
             example['labels'] = self.whisper_tokenizer(text).input_ids[:]
             res_jie = self.whisper_tokenizer.decode(example['labels'],skip_special_tokens=False)
