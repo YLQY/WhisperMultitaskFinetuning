@@ -8,7 +8,7 @@ from whisper.utils.common_utils import (
 
 log_info("加载配置文件")
 config = load_whisper_config(
-    "/mnt/f/wsl/asr_large_model/whisper-multitask-finetuning/example/aishell-sample/config/whisper_multitask.yaml"
+    "./config/whisper_multitask.yaml"
 )
 
 log_info("加载模型测试器")
