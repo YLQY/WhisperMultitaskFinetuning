@@ -22,7 +22,13 @@ eg:
 热词词库：data/hotword.txt
 热词aishell：data/{wav.scp,text}
 ```
-### 1.3 运行代码
-
+### 1.3 更改配置文件
+```markdown
+目录：config/whisper_multitask.yaml
+```
+### 1.4 运行代码
+```markdown
+python3 predict.py
+```
 
 
