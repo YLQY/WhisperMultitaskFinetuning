@@ -15,12 +15,13 @@ cp code/utils.py /path/to/transformers/generation/utils.py
 ```markdown
 数据集1：热词aishell（一共235条）
 https://www.modelscope.cn/datasets/speech_asr/speech_asr_aishell1_hotwords_testsets/files
-数据集2：其他集合
+数据集2：其他集合（cv-corpus-19.0-2024-09-13-zh-CN.tar.gz）
 https://commonvoice.mozilla.org/zh-CN/datasets
 
 eg:
 热词词库：data/hotword.txt
-热词aishell：data/{wav.scp,text}
+热词测试集aishell：data/{wav.scp,text}
+吉他集合测试集：data/{commonvoice.wav.scp,commonvoice.text}
 ```
 ### 3 下载模型
 ```markdown
@@ -38,8 +39,8 @@ predict:
   model_path: "/mnt/f/WSL/lainspeech/whisper/hot_words/model"
   # 结果输出文件
   result_file: "./data/result"
-  eval:
-    # 对应上面步骤2，准备的wav.scp和text路径
+  # 对应上面步骤2，准备的wav.scp和text路径
+  eval: 
     wav_scp: "/mnt/f/WSL/lainspeech/whisper/hot_words/WhisperMultitaskFinetuning/example/aishell-hot-words/data/wav.scp"
     text: "/mnt/f/WSL/lainspeech/whisper/hot_words/WhisperMultitaskFinetuning/example/aishell-hot-words/data/text"
 model:
