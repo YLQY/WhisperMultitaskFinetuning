@@ -3,7 +3,7 @@
 pip install transformers==4.44.0
 pip install torch==1.13.0
 ```
-### 1.1 安装环境&代码更新
+### 1 安装环境&代码更新
 ```markdown
 pip show transformers
 
@@ -11,7 +11,7 @@ pip show transformers
 cp whisper/utils/tree_node.py /path/to/transformers/generation/
 cp code/utils.py /path/to/transformers/generation/utils.py
 ```
-### 1.2 准备数据
+### 2 准备数据
 ```markdown
 数据集1：热词aishell（一共235条）
 https://www.modelscope.cn/datasets/speech_asr/speech_asr_aishell1_hotwords_testsets/files
@@ -22,13 +22,38 @@ eg:
 热词词库：data/hotword.txt
 热词aishell：data/{wav.scp,text}
 ```
-### 1.3 更改配置文件
+### 3 下载模型
+```markdown
+GIT_LFS_SKIP_SMUDGE=1 git clone https://huggingface.co/BELLE-2/Belle-whisper-large-v2-zh
+git lfs fetch
+git lfs checkout
+```
+### 4 更改配置文件
 ```markdown
 目录：config/whisper_multitask.yaml
+
+# 模型推理
+predict:
+  # 模型的路径，对应上面步骤3，下载模型的位置
+  model_path: "/mnt/f/WSL/lainspeech/whisper/hot_words/model"
+  # 结果输出文件
+  result_file: "./data/result"
+  eval:
+    # 对应上面步骤2，准备的wav.scp和text路径
+    wav_scp: "/mnt/f/WSL/lainspeech/whisper/hot_words/WhisperMultitaskFinetuning/example/aishell-hot-words/data/wav.scp"
+    text: "/mnt/f/WSL/lainspeech/whisper/hot_words/WhisperMultitaskFinetuning/example/aishell-hot-words/data/text"
+model:
+  # 模型的路径，对应上面步骤3，下载模型的位置
+  model_path: "/mnt/f/WSL/lainspeech/whisper/hot_words/model"
+
 ```
-### 1.4 运行代码
+### 5 运行代码
 ```markdown
 python3 predict.py
 ```
-
+### 6 计算WER
+```markdown
+# 传入步骤4中的结果输出文件路径
+bash wer.sh ./data/result
+```
 
