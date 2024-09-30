@@ -6,6 +6,7 @@ pip install transformers==4.44.0
 pip install torch==1.13.0
 pip install peft==0.13.0
 pip install torchaudio
+pip install ctranslate2==4.4.0
 ```
 ### 1 安装环境&代码更新
 ```markdown
