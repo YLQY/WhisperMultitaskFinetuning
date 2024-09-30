@@ -28,8 +28,11 @@ class TreeNode:
     # 添加分数
     def _add_score_idx(self,decoder_path):
 
-        # 热词完全匹配
-        if decoder_path == []:
+        # 热词开始匹配
+        if decoder_path == [-1]:
+            return self.child_nodes
+        # 热词匹配的过程中、热词的结尾
+        if len(decoder_path) == 0:
             return self.child_nodes
         
         temp = self.has_node(decoder_path[0])
@@ -45,12 +48,12 @@ class TreeNode:
 
         for i in range(total_length):
             target_path = find_path[i:]
-            print("查找路径",target_path)
+            #print("查找路径",target_path)
             return_nodes = self._add_score_idx(target_path)
             if return_nodes is not None:
                 return return_nodes
             pass
-        return self._add_score_idx([])
+        return self._add_score_idx([-1])
 
         pass
     pass
