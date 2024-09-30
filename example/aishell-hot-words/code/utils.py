@@ -1600,6 +1600,7 @@ class GenerationMixin:
         negative_prompt_ids: Optional[torch.Tensor] = None,
         negative_prompt_attention_mask: Optional[torch.Tensor] = None,
         hot_tree=None,
+        hot_words_score=0,
         **kwargs,
     ) -> Union[GenerateOutput, torch.LongTensor]:
         #print("lainspeech",hot_tree)
@@ -2084,6 +2085,7 @@ class GenerationMixin:
                 generation_config=generation_config,
                 synced_gpus=synced_gpus,
                 hot_tree=hot_tree,
+                hot_words_score=hot_words_score,
                 **model_kwargs,
             )
 
@@ -3123,6 +3125,7 @@ class GenerationMixin:
         synced_gpus: bool,
         logits_warper: Optional[LogitsProcessorList],
         hot_tree = None,
+        hot_words_score = 0,
         **model_kwargs,
     ) -> Union[GenerateBeamOutput, torch.LongTensor]:
         r"""
@@ -3283,7 +3286,8 @@ class GenerationMixin:
                 for i in lists:
                     if i.value == 99999:
                         continue
-                    next_token_scores[path_idx,i.value] += np.log(i.deep)
+                    #next_token_scores[path_idx,i.value] += np.log(i.deep)
+                    next_token_scores[path_idx,i.value] += hot_words_score
 
                 pass
             # Store scores, attentions and hidden_states when required
@@ -3348,7 +3352,7 @@ class GenerationMixin:
             beam_idx = beam_outputs["next_beam_indices"]
             #print("beam_search之后保留的beam_next_tokens",beam_next_tokens)
             input_ids = torch.cat([input_ids[beam_idx, :], beam_next_tokens.unsqueeze(-1)], dim=-1)
-            print("input_ids",input_ids)
+            #print("input_ids",input_ids)
             model_kwargs = self._update_model_kwargs_for_generation(
                 outputs,
                 model_kwargs,
