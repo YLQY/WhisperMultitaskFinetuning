@@ -1,7 +1,11 @@
 ## 案例1：在Transformers上实现热词功能-Whisper为案例
 ```markdown
+conda create -n whipser-hot-words python=3.10
+conda activate whipser-hot-word
 pip install transformers==4.44.0
 pip install torch==1.13.0
+pip install peft==0.13.0
+pip install torchaudio
 ```
 ### 1 安装环境&代码更新
 ```markdown
