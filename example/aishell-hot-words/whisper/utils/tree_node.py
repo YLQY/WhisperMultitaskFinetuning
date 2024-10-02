@@ -56,4 +56,19 @@ class TreeNode:
         return self._add_score_idx([-1])
 
         pass
+
+    # 查找最后的热词是否在树里面
+    def final_add_score(self,find_path):
+        # 代表热词匹配了
+        if self.has_node(99999):
+            return True
+        # 路径没有传入东西
+        if len(find_path) == 0:
+            return False
+        temp = self.has_node(find_path[0])
+        if temp is not None:
+            return temp.final_add_score(find_path[1:])
+        else:
+            return False
+        pass
     pass
