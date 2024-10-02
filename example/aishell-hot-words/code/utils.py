@@ -13,6 +13,9 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+from transformers import (
+    WhisperTokenizer
+)
 import numpy as np
 import copy
 import inspect
@@ -3183,6 +3186,8 @@ class GenerationMixin:
         batch_size = len(beam_scorer._beam_hyps)
         num_beams = beam_scorer.num_beams
         #print("开启了BeamSearch：",num_beams)
+        ori_hot_list = hot_tree._add_score_idx([-1])
+
         batch_beam_size, cur_len = input_ids.shape
         model_kwargs = self._get_initial_cache_position(input_ids, model_kwargs)
 
@@ -3278,7 +3283,7 @@ class GenerationMixin:
             next_token_scores = next_token_scores_processed + beam_scores[:, None].expand_as(
                 next_token_scores_processed
             )
-            #print("经过处理后的得分输出：",np.shape(next_token_scores))
+            #print("经过处理后的得分输出：",next_token_scores.max())
             for path_idx,path in enumerate(input_ids):
                 lists = hot_tree.find_path_add_score_return_idx(path.tolist())
                 if lists is None:
@@ -3288,7 +3293,26 @@ class GenerationMixin:
                         continue
                     #next_token_scores[path_idx,i.value] += np.log(i.deep)
                     next_token_scores[path_idx,i.value] += hot_words_score
-
+                    
+                # # 添加惩罚-如果热词第一个匹配了，然后第二个没有匹配，则扣分
+                # last_lists = hot_tree.find_path_add_score_return_idx(path.tolist()[:-2])
+                
+                # # 当前没有匹配到热词，而且上一个匹配到了热词 - 热词匹配失效
+                # if lists == ori_hot_list and last_lists != ori_hot_list:
+                #     for i in lists:
+                #         if i.value == 99999:
+                #             continue
+                #         #next_token_scores[path_idx,i.value] += np.log(i.deep)
+                #         next_token_scores[path_idx,i.value] -= hot_words_score+1
+                #     pass
+                # # # 当前匹配到热词，而且上一个没有匹配热词 - 热词的开头 - 
+                # if lists == ori_hot_list and last_lists != ori_hot_list:
+                #     for i in lists:
+                #         if i.value == 99999:
+                #             continue
+                #         #next_token_scores[path_idx,i.value] += np.log(i.deep)
+                #         next_token_scores[path_idx,i.value] += 1
+                #     pass
                 pass
             # Store scores, attentions and hidden_states when required
             if return_dict_in_generate:
@@ -3352,7 +3376,20 @@ class GenerationMixin:
             beam_idx = beam_outputs["next_beam_indices"]
             #print("beam_search之后保留的beam_next_tokens",beam_next_tokens)
             input_ids = torch.cat([input_ids[beam_idx, :], beam_next_tokens.unsqueeze(-1)], dim=-1)
-            #print("input_ids",input_ids)
+            # whisper_tokenizer = WhisperTokenizer.from_pretrained("/data/asr_hot_words_whisper/Belle-whisper-large-v2-zh")
+            # decoded_preds = whisper_tokenizer.batch_decode(input_ids, skip_special_tokens=True)
+            # # print(decoded_preds)
+            # for ldl,lain in enumerate(decoded_preds):
+            #     print('input_idx',lain,beam_scores[ldl])
+            # print("input_ids",input_ids)
+            # for lain in beam_scorer._beam_hyps:
+            #     # print(whisper_tokenizer.batch_decode(lain[1], skip_special_tokens=True),lain[0])
+            #     for speech in lain.beams:
+            #         # print(speech)
+            #         print(whisper_tokenizer.batch_decode([speech[1]], skip_special_tokens=True),speech[0])
+            #         pass
+            #     pass
+            
             model_kwargs = self._update_model_kwargs_for_generation(
                 outputs,
                 model_kwargs,
@@ -3379,6 +3416,25 @@ class GenerationMixin:
             if beam_scorer.is_done or all(stopping_criteria(input_ids, scores)):
                 this_peer_finished = True
 
+        # 热词最后如果在beam里面就最后加个分-（完整的热词）
+        for lain in range(len(beam_scorer._beam_hyps)):
+            # print(whisper_tokenizer.batch_decode(lain[1], skip_special_tokens=True),lain[0])
+            for speech in range(len(beam_scorer._beam_hyps[lain].beams)):
+                add_lain_hot_words = False
+                for sub_path_idx in range(len(beam_scorer._beam_hyps[lain].beams[speech][1])):
+                    if hot_tree.final_add_score(beam_scorer._beam_hyps[lain].beams[speech][1][sub_path_idx:]):
+                        add_lain_hot_words=True
+                        break
+                    pass
+                if add_lain_hot_words:
+                    beam_scorer._beam_hyps[lain].beams[speech] = (beam_scorer._beam_hyps[lain].beams[speech][0]+3 , beam_scorer._beam_hyps[lain].beams[speech][1] , beam_scorer._beam_hyps[lain].beams[speech][2])
+                #print("final111-",whisper_tokenizer.batch_decode([beam_scorer._beam_hyps[lain].beams[speech][1]], skip_special_tokens=True),beam_scorer._beam_hyps[lain].beams[speech][0])
+                pass
+            pass
+
+        # for lain in beam_scorer._beam_hyps:
+        #     for speech in lain.beams:
+        #         print("final-",whisper_tokenizer.batch_decode([speech[1]], skip_special_tokens=True),speech[0])
         sequence_outputs = beam_scorer.finalize(
             input_ids,
             beam_scores,
