@@ -1,6 +1,6 @@
 ## 案例1：在Transformers上实现热词功能-Whisper为案例		
 ### 0 效果
-| 参数   | Aishell1-235 | Aishell1-235-fix | Aishell1-235-fix-addfinal_score | Aishell1-235-fix-addfinal_score-add_inputidx-punish | CommonVoice-19-test-fix-addfinal_score |
+| 参数   | Aishell1-235 | Aishell1-235-fix1 | Aishell1-235-fix2 | Aishell1-235-fix3 | CommonVoice-19-test-fix1 |
 | :-----------------: | :----: | :-------: | :-------: | :-------: | :-------: |
 | B=3、S=0  | 9.00/78.72  | 9.03/78.72	|7.90/67.23  |	7.90/67.23  |	16.15/64.59 |
 | B=3、S=1  | 6.85/62.55  |	6.95/62.97	|6.27/56.17	 |6.09/55.31	  |14.91/65.14|
